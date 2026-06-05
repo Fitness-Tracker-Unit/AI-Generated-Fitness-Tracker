@@ -1,5 +1,5 @@
 import os
-from data.generate import generate_dataset, users_to_dataframe
+from data.generate_dirty import generate_dataset, users_to_dataframe, make_dirty
 from data.cleaning import clean_dataframe, save_clean
 from services.recommendation_engine import RecommendationEngine
 from analysis.statistics import weekly_summary
@@ -18,12 +18,27 @@ from visualizations.charts import (
 os.makedirs("outputs", exist_ok=True)
 
 # ── 1. Donnees ────────────────────────────────────────────────────
+
 print("=" * 50)
 print("GENERATION DES DONNEES")
 print("=" * 50)
-users = generate_dataset(n_users=300)
-df    = users_to_dataframe(users)
-print(f"{len(users)} utilisateurs, {len(df)} logs generes.\n")
+users  = generate_dataset(n=300)
+df_raw = users_to_dataframe(users)
+df_raw = make_dirty(df_raw)          # ← injection des erreurs
+print(f"Brut (sale) : {df_raw.shape}")
+print(f"NaN total   : {df_raw.isnull().sum().sum()}")
+
+print("=" * 50)
+print("NETTOYAGE")
+print("=" * 50)
+df = clean_dataframe(df_raw)
+save_clean(df)
+print(f"\nPropre : {df.shape}")
+
+# ── tout le reste du main.py reste identique ──
+# (recommandations, stats, scipy, visualisations)
+# il utilise df (propre) dès ici
+
 
 # ── 2. Recommandations ───────────────────────────────────────────
 print("=" * 50)
