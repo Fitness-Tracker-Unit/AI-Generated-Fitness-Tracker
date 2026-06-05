@@ -140,7 +140,6 @@ def _drop_constant(df):
 
 
 def save_clean(df: pd.DataFrame):
-    """Export vers processed/ — remplit les CSV vides."""
     df[["user","age","goal","city"]].drop_duplicates().to_csv(
         "data/processed/users_clean.csv", index=False)
     df[["user","date","steps","calories","workout_type"]].to_csv(
