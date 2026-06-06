@@ -1,7 +1,9 @@
 import os
-from data.generate_dirty import generate_dataset, users_to_dataframe, make_dirty
+import sys
+from data.generate_dirty import generate_dataset, users_to_dataframe, make_dirty, save_dirty
 from data.cleaning import clean_dataframe, save_clean
 from services.recommendation_engine import RecommendationEngine
+from services.fitness_score_service import FitnessScoreService
 from analysis.statistics import weekly_summary
 from analysis.scipy_analysis import (
     anova_calories_by_workout,
@@ -16,7 +18,7 @@ from visualizations.charts import (
 )
 
 os.makedirs("outputs", exist_ok=True)
-
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # ── 1. Donnees ────────────────────────────────────────────────────
 
 print("=" * 50)
@@ -25,6 +27,7 @@ print("=" * 50)
 users  = generate_dataset(n=300)
 df_raw = users_to_dataframe(users)
 df_raw = make_dirty(df_raw)          # ← injection des erreurs
+save_dirty(df_raw)   # ← ajoute cette ligne
 print(f"Brut (sale) : {df_raw.shape}")
 print(f"NaN total   : {df_raw.isnull().sum().sum()}")
 
@@ -52,6 +55,16 @@ for user in users:
     print(f"  → Niveau activite: {reco['activity_level']}")
     print()
 
+
+# ──  Fitness score ───────────────────────────────
+scorer = FitnessScoreService()
+print("\n=== FITNESS SCORES ===")
+for user in users[:5]:  # les 5 premiers pour la démo
+    recent = user.get_recent_logs(7)
+    result = scorer.calculate_score(recent)
+    print(f"{user.name} → {result['score']}/100")
+    
+    
 # ── 3. Statistiques hebdomadaires ───────────────────────────────
 print("=" * 50)
 print("RESUME HEBDOMADAIRE (Pandas)")

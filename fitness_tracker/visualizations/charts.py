@@ -44,7 +44,7 @@ def plot_workout_frequency(df: pd.DataFrame, user_name: str = None):
     freq = data["workout_type"].value_counts()
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    sns.barplot(x=freq.index, y=freq.values, ax=ax, palette="viridis")
+    sns.barplot(x=freq.index, y=freq.values, ax=ax, hue=freq.index, palette="viridis", legend=False)
     title = f"Frequence des entrainements — {user_name}" if user_name else "Frequence globale"
     ax.set_title(title)
     ax.set_xlabel("Type")

@@ -20,8 +20,8 @@ def generate_dataset(n=300):
         user = User(
             name=fake.name(),
             age=random.randint(20, 55),
-            city=fake.city(),
             goal=random.choice(GOALS),
+            city=fake.city(),
         )
         for i in range(30):
             wt = random.choice(WORKOUT_TYPES)
@@ -107,3 +107,35 @@ def make_dirty(df: pd.DataFrame, seed=42) -> pd.DataFrame:
     df.loc[idx_str_date, "date"] = "invalid_date"
 
     return df.reset_index(drop=True)
+
+def save_dirty(df: pd.DataFrame):
+    import os
+    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    raw = os.path.join(base, "data", "raw")
+    os.makedirs(raw, exist_ok=True)
+    
+    # Activities dirty
+    df.to_csv(os.path.join(raw, "activities_dirty.csv"), index=False)
+    
+    # Users dirty
+    df[["user", "age", "goal", "city"]].drop_duplicates("user").to_csv(
+        os.path.join(raw, "users_dirty.csv"), index=False
+    )
+    
+    print(f"Dataset sale exporté → data/raw/activities_dirty.csv ({df.shape[0]} lignes)")
+    print(f"Users sale exporté   → data/raw/users_dirty.csv ({df['user'].nunique()} users)")
+
+
+# if __name__ == "__main__":
+
+#     users = generate_dataset(300)
+
+#     df = users_to_dataframe(users)
+
+#     print(df.head())
+
+#     print(f"\nShape : {df.shape}")
+
+#     df.to_csv("data/raw/activities.csv", index=False)
+
+#     print("\nDataset généré avec succès.")

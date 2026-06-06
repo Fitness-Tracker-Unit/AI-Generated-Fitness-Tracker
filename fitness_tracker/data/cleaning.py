@@ -140,8 +140,12 @@ def _drop_constant(df):
 
 
 def save_clean(df: pd.DataFrame):
+    import os
+    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    processed = os.path.join(base, "data", "processed")
+    os.makedirs(processed, exist_ok=True)
     df[["user","age","goal","city"]].drop_duplicates().to_csv(
-        "data/processed/users_clean.csv", index=False)
+        os.path.join(processed, "users_clean.csv"), index=False)
     df[["user","date","steps","calories","workout_type"]].to_csv(
-        "data/processed/activities_clean.csv", index=False)
+        os.path.join(processed, "activities_clean.csv"), index=False)
     print("CSV exportés → data/processed/")

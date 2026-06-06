@@ -12,10 +12,7 @@ class UserLog:
     workout_type: str          # "Running", "Yoga", "HIIT", "Strength", "Rest"
 
     def __post_init__(self):
-        if self.steps < 0:
-            raise ValueError("Les pas ne peuvent pas etre negatifs.")
-        if self.calories < 0:
-            raise ValueError("Les calories ne peuvent pas etre negatives.")
+        pass
 
 
 @dataclass
@@ -23,8 +20,8 @@ class User:
     """Profil utilisateur — exactement ce que le sujet demande."""
     name: str
     age: int
-    city: str = "Unknown"       # Champ optionnel pour les analyses geographiques
     goal: str                  # "weight_loss" | "strength" | "endurance"
+    city: str = "Unknown"       # Champ optionnel pour les analyses geographiques
     daily_logs: List[UserLog] = field(default_factory=list)
 
     def add_log(self, log: UserLog):
