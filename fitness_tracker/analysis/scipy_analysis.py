@@ -74,46 +74,47 @@ def linear_regression_steps(df: pd.DataFrame, user_name: str) -> dict:
 
 # ─── 3. T-TEST APPARIE ───────────────────────────────────────────────────────
 
-def paired_ttest_before_after(df: pd.DataFrame,
-                               user_name: str,
-                               workout_type: str,
-                               split_day: int = 15) -> dict:
+def paired_ttest_before_after(df, user_name, workout_type, split_day=15):
+    
     """
     T-test apparie : l'entrainement a-t-il significativement
     change les calories brulees avant / apres un regime ?
 
     split_day : le jour qui separe "avant" et "apres".
     """
+    
     user_df = (
         df[(df["user"] == user_name) & (df["workout_type"] == workout_type)]
         .sort_values("date")
         .reset_index(drop=True)
     )
+    
+    # ── FIX : split à la moitié des données réelles
+    n = len(user_df)
+    if n < 4:
+        return {"error": f"Pas assez de séances '{workout_type}' pour cet utilisateur ({n} séance(s))."}
+    
+    split = n // 2  # ignore le split_day, coupe en deux
+    before = user_df.iloc[:split]["calories"].values
+    after  = user_df.iloc[split:]["calories"].values
 
-    before = user_df.iloc[:split_day]["calories"].values
-    after  = user_df.iloc[split_day:]["calories"].values
-
-    # Egalise les longueurs pour le test apparie
     min_len = min(len(before), len(after))
-    if min_len < 2:
-        return {"error": "Pas assez de donnees pour ce test."}
-
     before, after = before[:min_len], after[:min_len]
+
     t_stat, p_value = stats.ttest_rel(before, after)
 
     return {
-        "test":          "T-test apparie",
-        "user":          user_name,
-        "workout":       workout_type,
-        "mean_before":   round(np.mean(before), 2),
-        "mean_after":    round(np.mean(after), 2),
-        "t_statistic":   round(t_stat, 4),
-        "p_value":       round(p_value, 6),
-        "significant":   p_value < 0.05,
+        "test":        "T-test apparié",
+        "user":        user_name,
+        "workout":     workout_type,
+        "mean_before": round(np.mean(before), 2),
+        "mean_after":  round(np.mean(after), 2),
+        "t_statistic": round(t_stat, 4),
+        "p_value":     round(p_value, 6),
+        "significant": p_value < 0.05,
+        "n_sessions":  n,
         "conclusion": (
-            f"Le programme '{workout_type}' a produit un changement "
-            f"SIGNIFICATIF sur les calories (p < 0.05)."
-            if p_value < 0.05 else
-            f"Pas de difference significative avant/apres '{workout_type}'."
+            f"Changement {'SIGNIFICATIF' if p_value < 0.05 else 'non significatif'} "
+            f"sur les calories (p={round(p_value,4)}) — {n} séances analysées."
         ),
     }

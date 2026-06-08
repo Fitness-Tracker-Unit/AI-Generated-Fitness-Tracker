@@ -117,10 +117,17 @@ def _fix_outliers(df):
 
 
 def _fix_workout_type(df):
-    # Normalise : strip + capitalize
-    df["workout_type"] = df["workout_type"].str.strip().str.capitalize()
+    # Normalisation avec cas spécial HIIT
+    def normalize(val):
+        if pd.isna(val):
+            return val
+        v = str(val).strip()
+        if v.upper() == "HIIT":
+            return "HIIT"
+        return v.capitalize()
 
-    # Valeurs encore invalides → NaN → mode
+    df["workout_type"] = df["workout_type"].apply(normalize)
+
     mask = ~df["workout_type"].isin(VALID_WORKOUTS)
     n = mask.sum()
     mode = df.loc[~mask, "workout_type"].mode()[0]

@@ -21,9 +21,9 @@ os.makedirs("outputs", exist_ok=True)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # ── 1. Donnees ────────────────────────────────────────────────────
 
-print("=" * 50)
+print("-" * 20)
 print("GENERATION DES DONNEES")
-print("=" * 50)
+print("-" * 20)
 users  = generate_dataset(n=300)
 df_raw = users_to_dataframe(users)
 df_raw = make_dirty(df_raw)          # ← injection des erreurs
@@ -31,9 +31,9 @@ save_dirty(df_raw)   # ← ajoute cette ligne
 print(f"Brut (sale) : {df_raw.shape}")
 print(f"NaN total   : {df_raw.isnull().sum().sum()}")
 
-print("=" * 50)
+print("-" * 20)
 print("NETTOYAGE")
-print("=" * 50)
+print("-" * 20)
 df = clean_dataframe(df_raw)
 save_clean(df)
 print(f"\nPropre : {df.shape}")
@@ -44,9 +44,9 @@ print(f"\nPropre : {df.shape}")
 
 
 # ── 2. Recommandations ───────────────────────────────────────────
-print("=" * 50)
+print("-" * 20)
 print("RECOMMANDATIONS PERSONNALISEES")
-print("=" * 50)
+print("-" * 20)
 engine = RecommendationEngine()
 for user in users:
     reco = engine.recommend(user)
@@ -66,17 +66,17 @@ for user in users[:5]:  # les 5 premiers pour la démo
     
     
 # ── 3. Statistiques hebdomadaires ───────────────────────────────
-print("=" * 50)
+print("-" * 20)
 print("RESUME HEBDOMADAIRE (Pandas)")
-print("=" * 50)
+print("-" * 20)
 summary = weekly_summary(df)
 print(summary.to_string(index=False))
 print()
 
 # ── 4. SciPy ─────────────────────────────────────────────────────
-print("=" * 50)
+print("-" * 20)
 print("ANALYSES SCIPY")
-print("=" * 50)
+print("-" * 20)
 
 print("\n--- ANOVA : calories par type d'entrainement ---")
 anova = anova_calories_by_workout(df)
@@ -101,9 +101,9 @@ else:
     print(ttest["error"])
 
 # ── 5. Visualisations ────────────────────────────────────────────
-print("\n" + "=" * 50)
+print("\n" + "-" * 20)
 print("VISUALISATIONS")
-print("=" * 50)
+print("-" * 20)
 plot_steps_over_time(df, first_user)
 plot_calories_over_time(df, first_user)
 plot_workout_frequency(df, first_user)

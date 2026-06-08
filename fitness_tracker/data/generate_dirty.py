@@ -1,9 +1,13 @@
+import os, sys
 import random
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
 from faker import Faker
 from models.user import User, UserLog
+
+os.makedirs("outputs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 fake = Faker("fr_FR")
 
@@ -23,12 +27,12 @@ def generate_dataset(n=300):
             goal=random.choice(GOALS),
             city=fake.city(),
         )
-        for i in range(30):
+        for i in range(90):
             wt = random.choice(WORKOUT_TYPES)
             lo, hi = STEPS[wt]
             mu, sd = CALORIES[wt]
             user.add_log(UserLog(
-                date=date.today() - timedelta(days=30 - i),
+                date=date.today() - timedelta(days=90 - i),
                 steps=random.randint(lo, hi),
                 calories=max(0, random.gauss(mu, sd)),
                 workout_type=wt,
