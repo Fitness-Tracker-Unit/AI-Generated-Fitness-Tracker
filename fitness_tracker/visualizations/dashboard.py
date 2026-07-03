@@ -254,10 +254,23 @@ with tab0:
         </div>""", unsafe_allow_html=True)
 
     st.divider()
-    st.markdown(f"<p style='color:{SUBTEXT};font-size:.8rem;text-align:center'>"
-                f"AI-Generated Fitness Tracker · Hackathon #1 · "
-                f"<i class='fa-solid fa-location-dot'></i> Abidjan, Côte d'Ivoire"
-                f"</p>", unsafe_allow_html=True)
+
+    st.markdown(
+        f"""
+        <div style="text-align:center; color:{SUBTEXT}; font-size:.85rem;">
+            AI-Generated Fitness Tracker · Hackathon #1 ·
+            <i class="fa-solid fa-location-dot"></i> Abidjan, Côte d'Ivoire
+            <br><br>
+            Developed by
+            <a href="https://carte-virtuelle-fahim.vercel.app/"
+            target="_blank"
+            style="text-decoration:none; font-family:Signika; font-weight:600;">
+            Fahim Coulibaly
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ══ TAB 1 — VUE GLOBALE
 with tab1:
