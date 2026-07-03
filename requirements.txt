@@ -6,3 +6,4 @@ seaborn
 faker
 streamlit
 plotly
+openpyxl
