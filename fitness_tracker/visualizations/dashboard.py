@@ -35,6 +35,27 @@ SIDEBAR  = "#0f1922"  if DARK else "#e8edf2"
 ACCENT   = "#4fc3f7"
 PLOTLY_T = "plotly_dark" if DARK else "plotly_white"
 
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Signika:wght@300;400;500;600;700&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Signika', sans-serif;
+    }
+
+    .stApp {
+        font-family: 'Signika', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, p, span, div, label {
+        font-family: 'Signika', sans-serif;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown(f"""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -257,14 +278,14 @@ with tab0:
 
     st.markdown(
         f"""
-        <div style="text-align:center; color:{SUBTEXT}; font-size:.85rem;">
+        <div style="text-align:center; color:{SUBTEXT}; font-size:.85rem; font-family:'Signika', sans-serif;">
             AI-Generated Fitness Tracker · Hackathon #1 ·
             <i class="fa-solid fa-location-dot"></i> Abidjan, Côte d'Ivoire
             <br><br>
             Developed by
             <a href="https://carte-virtuelle-fahim.vercel.app/"
             target="_blank"
-            style="text-decoration:none; font-family:Signika; font-weight:600;">
+            style="font-weight:600; text-decoration:none;">
             Fahim Coulibaly
             </a>
         </div>
